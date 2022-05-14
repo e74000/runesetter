@@ -198,6 +198,10 @@ func main() {
 	flag.StringVar(&path, "p", "", "The path to the file you want to create or edit.")
 	flag.Parse()
 
+	if path == "" {
+		fmt.Println("Please specify a path to the file you want to edit! (use the -p flag)")
+	}
+
 	fmt.Println("Reading file:", path)
 
 	r, err, found := ReadRunesetFile(path)
