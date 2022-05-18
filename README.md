@@ -2,18 +2,29 @@
 
 A very simple TUI program for generating character sets.
 
-## To run:
-
-Just run `go build .` and then `./runesetter` when in the project directory.
-
 ## How to use:
 
-* Use arrow keys to move the cursor.
-* Use Enter/Space to select a character or flip a bit.
-* Use Esc/Q to quit or leave edit mode.
+### Running the program
+
+* Run the program from a terminal. (If you are on Windows please use Windows Terminal if possible.)
+* Use the flag `-p` to specify the path to the file you want to edit.
+* If you want to convert an image file to a runeset specify the path to the image with `-i`and the path to the runeset file you want to create with `-p`[^\*][^†] (Note: if you specify an already existing file it will overwrite that file.)
+
+### Keybindings
+
+* Use `Up/Down/Left/Right` keys to move the cursor,
+* Use `Enter/Space` to select a character or flip a bit,
+* Use `Esc/Q` to quit or leave edit mode,
+* Press `Backspace` to clear a character,
+* Press `I` to invert a character,
+* Press `F` to flip a character,
+* Press `C/V` to copy/paste a character respectively,
 
 ## Screenshots:
 
 ![All characters screen](./screenshots/1.png)
 ![Editing an example character](./screenshots/2.png)
 ![Editing a blank character](./screenshots/3.png)
+
+[^\*]: Note: if you specify an already existing file, the file will be overwritten.
+[^†]: The files should be (256x64) `.png` file with a white (`0xFFFFFF`) background and black (`0x000000`) foreground. Other colours are ignored.

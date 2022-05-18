@@ -19,15 +19,19 @@ var (
 			Background(gloss.Color("52")).
 			Foreground(gloss.Color("196"))
 	subtle = gloss.Color("235")
+
+	spacerH = gloss.NewStyle().Foreground(subtle).Render("▞\n▞\n▞\n▞") // The following line is not good
+	spacerV = gloss.NewStyle().Foreground(subtle).Render("▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞")
 )
 
 type Model struct {
-	runeset Runeset
-	path    string
-	view    string
-	fx, fy  int
-	editing int
-	ex, ey  int
+	runeset   Runeset
+	path      string
+	view      string
+	fx, fy    int
+	editing   int
+	ex, ey    int
+	clipboard RuneBytes
 }
 
 func (m Model) Init() tea.Cmd {
@@ -47,6 +51,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.view = "all"
 			}
 
+		case "i", "I":
+			t, _ := m.runeset.ReadAt(m.fy*32 + m.fx)
+			t = t.Invert()
+			_ = m.runeset.SetAt(t, m.fy*32+m.fx)
+		case "f", "F":
+			t, _ := m.runeset.ReadAt(m.fy*32 + m.fx)
+			t = t.Reverse()
+			_ = m.runeset.SetAt(t, m.fy*32+m.fx)
+		case "c", "C":
+			m.clipboard, _ = m.runeset.ReadAt(m.fy*32 + m.fx)
+		case "v", "V":
+			_ = m.runeset.SetAt(m.clipboard, m.fy*32+m.fx)
+		case "backspace":
+			_ = m.runeset.SetAt(RuneBytes{}, m.fy*32+m.fx)
 		case "enter", " ":
 			switch m.view {
 			case "all":
@@ -128,9 +146,6 @@ func (m Model) View() string {
 
 	switch m.view {
 	case "all":
-		spacerH := gloss.NewStyle().Foreground(subtle).Render("▞\n▞\n▞\n▞")
-		spacerV := gloss.NewStyle().Foreground(subtle).Render("▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞")
-
 		if m.view == "all" {
 			for j := 0; j < 8; j++ {
 				line := ""
@@ -159,7 +174,7 @@ func (m Model) View() string {
 		return gloss.Place(tx, ty, gloss.Center, gloss.Center, s,
 			gloss.WithWhitespaceChars("▞"), gloss.WithWhitespaceForeground(subtle))
 	case "edit":
-		img, _ := m.runeset.ToImg(m.editing)
+		img, _ := m.runeset.ToBitArray(m.editing)
 
 		for i := 0; i < 8; i++ {
 			for j := 0; j < 8; j++ {
@@ -193,13 +208,18 @@ func (m Model) View() string {
 }
 
 func main() {
-	var path string
+	var (
+		path      string
+		imagePath string
+	)
 
 	flag.StringVar(&path, "p", "", "The path to the file you want to create or edit.")
+	flag.StringVar(&imagePath, "i", "", "The path to the image file you want to read.")
 	flag.Parse()
 
 	if path == "" {
 		fmt.Println("Please specify a path to the file you want to edit! (use the -p flag)")
+		return
 	}
 
 	fmt.Println("Reading file:", path)
@@ -231,7 +251,23 @@ func main() {
 			fmt.Println("Runeset created successfully...")
 		}
 	} else {
-		fmt.Println("Successfully read file...")
+		fmt.Println("Successfully read file.")
+	}
+
+	if imagePath != "" {
+		fmt.Println("Reading image file:", imagePath)
+		r, err = readImage(imagePath)
+
+		if err != nil {
+			if err == NotFoundError {
+				fmt.Println("Image file not found!")
+			} else {
+				fmt.Println("Failed to read image:", err)
+			}
+			fmt.Println("Continuing without image data...")
+		} else {
+			fmt.Println("Successfully red image file.")
+		}
 	}
 
 	m := Model{
@@ -246,4 +282,6 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
+	fmt.Println("Program exited successfully.")
 }
