@@ -8,7 +8,7 @@ A very simple TUI program for generating character sets.
 
 * Run the program from a terminal. (If you are on Windows please use Windows Terminal if possible.)
 * Use the flag `-p` to specify the path to the file you want to edit.
-* If you want to convert an image file to a runeset specify the path to the image with `-i`and the path to the runeset file you want to create with `-p`[^\*][^†] (Note: if you specify an already existing file it will overwrite that file.)
+* If you want to convert an image file to a runeset specify the path to the image with `-i`and the path to the runeset file you want to create with `-p`[^1][^2]
 
 ### Keybindings
 
@@ -26,5 +26,5 @@ A very simple TUI program for generating character sets.
 ![Editing an example character](./screenshots/2.png)
 ![Editing a blank character](./screenshots/3.png)
 
-[^\*]: Note: if you specify an already existing file, the file will be overwritten.
-[^†]: The files should be (256x64) `.png` file with a white (`0xFFFFFF`) background and black (`0x000000`) foreground. Other colours are ignored.
+[^1]: Note: if you specify an already existing file, the file will be overwritten.
+[^2]: The files should be (256x64) `.png` file with a white (`0xFFFFFF`) background and black (`0x000000`) foreground. Other colours are ignored.
