@@ -10,15 +10,18 @@ import (
 )
 
 var (
+	redFg  = gloss.AdaptiveColor{Light: "124", Dark: "196"}
+	redBg  = gloss.AdaptiveColor{Light: "209", Dark: "52"}
+	subtle = gloss.AdaptiveColor{Light: "253", Dark: "235"}
+
 	boxStyle = gloss.NewStyle().
 			Border(gloss.RoundedBorder()).
-			BorderForeground(gloss.Color("196")).
+			BorderForeground(redFg).
 			Padding(2)
 	previewStyle  = gloss.NewStyle()
 	SelectedStyle = previewStyle.Copy().
-			Background(gloss.Color("52")).
-			Foreground(gloss.Color("196"))
-	subtle = gloss.Color("235")
+			Background(redBg).
+			Foreground(redFg)
 
 	spacerH = gloss.NewStyle().Foreground(subtle).Render("▞\n▞\n▞\n▞") // The following line is not good
 	spacerV = gloss.NewStyle().Foreground(subtle).Render("▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞")
