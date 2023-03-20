@@ -1,6 +1,8 @@
 # Runesetter
 
-A very simple TUI program for generating character sets.
+A very simple TUI program for generating character sets. This was written for a GPU that I am helping build as a project at college.
+
+The files this program produces is a 2kb binary file broken up into chunks of 8bytes. The output should be able to be directly put onto the character ROM.
 
 ## How to use:
 
